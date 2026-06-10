@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIREJ-C – Ministère du Règne de Jésus-Christ | Abidjan</title>
+  <meta name="description" content="MIREJ-C – Ministère du Règne de Jésus-Christ. Église chrétienne à Angré aux Scars, Cocody, Abidjan. Cultes vendredi 19h et dimanche 9h. Édification par la parole de Jésus-Christ." />
+  <meta name="keywords" content="MIREJ-C, église Abidjan, Cocody, Angré, Jésus-Christ, culte, évangile, Côte d'Ivoire" />
+  <meta property="og:title" content="MIREJ-C – Ministère du Règne de Jésus-Christ" />
+  <meta property="og:description" content="Édifiez-vous par la parole de Jésus-Christ. Rejoignez-nous à Angré aux Scars, Cocody, Abidjan." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyApfsteL74eDnY6uIBiRTjcucNbjbx4Vlo",
+      authDomain: "mirej-c.firebaseapp.com",
+      projectId: "mirej-c",
+      storageBucket: "mirej-c.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.inscrireFidele = async function(nom, numero, email, types) {
+      try {
+        await addDoc(collection(db, "fideles_sms"), {
+          nom, numero, email,
+          types_culte: types,
+          date_inscription: serverTimestamp(),
+          actif: true,
+          source: "site_web"
+        });
+        return { success: true };
+      } catch (e) {
+        console.error("Firebase error:", e);
+        return { success: false, error: e.message };
+      }
+    };
+  </script>
+
+  <style>
+    /* ── TOKENS ──────────────────────────────────────── */
+    :root {
+      --or:       #C9A84C;
+      --or-clair: #E8C96A;
+      --or-sombre:#A07830;
+      --bleu:     #2C5F8A;
+      --bleu-vif: #3A7BB5;
+      --noir:     #0D0D0D;
+      --noir-doux:#1A1A2E;
+      --gris:     #F7F5F0;
+      --blanc:    #FFFFFF;
+      --texte:    #2D2D2D;
+      --texte-doux:#6B6B6B;
+
+      --font-titre: 'Cinzel', serif;
+      --font-corps: 'Poppins', sans-serif;
+
+      --radius: 12px;
+      --ombre: 0 8px 32px rgba(0,0,0,0.12);
+      --ombre-or: 0 4px 24px rgba(201,168,76,0.3);
+    }
+
+    /* ── RESET & BASE ────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-corps);
+      color: var(--texte);
+      background: var(--blanc);
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── UTILITAIRES ─────────────────────────────────── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .section-titre {
+      font-family: var(--font-titre);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--noir-doux);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .section-sous-titre {
+      text-align: center;
+      color: var(--texte-doux);
+      font-size: 1.05rem;
+      margin-bottom: 56px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .ligne-or {
+      width: 64px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--or), var(--or-clair));
+      border-radius: 2px;
+      margin: 16px auto 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-family: var(--font-corps);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+    }
+    .btn-or {
+      background: linear-gradient(135deg, var(--or), var(--or-clair));
+      color: var(--noir);
+      box-shadow: var(--ombre-or);
+    }
+    .btn-or:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,0.45); }
+    .btn-bleu {
+      background: linear-gradient(135deg, var(--bleu), var(--bleu-vif));
+      color: var(--blanc);
+      box-shadow: 0 4px 20px rgba(44,95,138,0.35);
+    }
+    .btn-bleu:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(44,95,138,0.5); }
+    .btn-contour {
+      background: transparent;
+      border: 2px solid var(--or);
+      color: var(--or);
+    }
+    .btn-contour:hover { background: var(--or); color: var(--noir); }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 20, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      transition: background 0.3s;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+    .nav-logo {
+      font-family: var(--font-titre);
+      font-size: 1.6rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--or), var(--or-clair));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+    }
+    .nav-liens {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-liens a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      transition: color 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .nav-liens a:hover { color: var(--or-clair); }
+    .nav-cta { font-size: 0.85rem !important; }
+
+    /* Burger */
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .burger span {
+      width: 24px; height: 2px;
+      background: var(--or);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .menu-mobile {
+      display: none;
+      position: absolute;
+      top: 70px; left: 0; right: 0;
+      background: rgba(10,10,20,0.97);
+      padding: 24px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .menu-mobile.ouvert { display: flex; flex-direction: column; gap: 20px; }
+    .menu-mobile a {
+      color: rgba(255,255,255,0.85);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ── HÉROS ───────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.80) 100%),
+        url('https://images.pexels.com/photos/1666816/pexels-photo-1666816.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat;
+    }
+    .hero-lueur {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-contenu {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+      padding-top: 70px;
+      animation: fadeUp 1s ease both;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--or-clair);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--font-titre);
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 900;
+      color: var(--blanc);
+      line-height: 1;
+      letter-spacing: 4px;
+      text-shadow: 0 0 60px rgba(201,168,76,0.5);
+      margin-bottom: 8px;
+    }
+    .hero-sous-titre {
+      font-family: var(--font-titre);
+      font-size: clamp(0.95rem, 2.5vw, 1.3rem);
+      color: var(--or-clair);
+      letter-spacing: 2px;
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+    .hero-message {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: rgba(255,255,255,0.88);
+      line-height: 1.7;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .hero-adresse {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 44px;
+      letter-spacing: 1px;
+    }
+    .hero-adresse span { color: var(--or); font-weight: 600; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* Scroll indicator */
+    .scroll-ind {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      animation: bounce 2s infinite;
+    }
+    .scroll-ind::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(201,168,76,0.5), transparent);
+    }
+
+    /* ── À PROPOS ────────────────────────────────────── */
+    .a-propos { padding: 100px 0; background: var(--blanc); }
+    .apropos-grille {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      margin-bottom: 64px;
+    }
+    .apropos-texte h2 {
+      font-family: var(--font-titre);
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      color: var(--noir-doux);
+      margin-bottom: 20px;
+    }
+    .apropos-texte p {
+      color: var(--texte-doux);
+      line-height: 1.85;
+      font-size: 1.02rem;
+      margin-bottom: 32px;
+    }
+    .apropos-image {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--ombre);
+      position: relative;
+    }
+    .apropos-image img { width: 100%; height: 380px; object-fit: cover; }
+    .apropos-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius);
+      pointer-events: none;
+    }
+
+    /* MVV */
+    .mvv-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 56px; }
+    .mvv-carte {
+      background: var(--gris);
+      border-radius: var(--radius);
+      padding: 28px;
+      border-left: 4px solid var(--or);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .mvv-carte:hover { transform: translateY(-4px); box-shadow: var(--ombre); }
+    .mvv-carte h3 {
+      font-family: var(--font-titre);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--or-sombre);
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .mvv-carte p { color: var(--texte-doux); font-size: 0.95rem; line-height: 1.6; }
+
+    /* Valeurs */
+    .valeurs-titre {
+      font-family: var(--font-titre);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--noir-doux);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .valeurs-grille { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .valeur-item {
+      background: var(--blanc);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      text-align: center;
+      transition: all 0.3s;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .valeur-item:hover {
+      border-color: var(--or);
+      transform: translateY(-4px);
+      box-shadow: var(--ombre-or);
+    }
+    .valeur-item .icone { font-size: 2rem; margin-bottom: 12px; }
+    .valeur-item p { font-size: 0.88rem; color: var(--texte-doux); line-height: 1.5; font-weight: 500; }
+
+    /* ── CULTES ──────────────────────────────────────── */
+    .cultes { padding: 100px 0; background: var(--noir-doux); position: relative; overflow: hidden; }
+    .cultes::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .cultes::after {
+      content: '';
+      position: absolute;
+      bottom: -200px; left: -200px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(44,95,138,0.12) 0%, transparent 70%);
+    }
+    .cultes .section-titre { color: var(--blanc); }
+    .cultes .section-sous-titre { color: rgba(255,255,255,0.55); }
+
+    .cultes-grille {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .culte-carte {
+      border-radius: 16px;
+      padding: 44px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s, box-shadow 0.35s;
+    }
+    .culte-carte:hover { transform: translateY(-6px); }
+    .culte-carte.enseignement {
+      background: linear-gradient(145deg, #1a0a0a, #2d1010);
+      border: 1px solid rgba(201,168,76,0.25);
+      box-shadow: 0 8px 40px rgba(201,168,76,0.12);
+    }
+    .culte-carte.enseignement:hover { box-shadow: 0 16px 60px rgba(201,168,76,0.22); }
+    .culte-carte.adoration {
+      background: linear-gradient(145deg, #0a0a1a, #0d1428);
+      border: 1px solid rgba(44,95,138,0.35);
+      box-shadow: 0 8px 40px rgba(44,95,138,0.15);
+    }
+    .culte-carte.adoration:hover { box-shadow: 0 16px 60px rgba(44,95,138,0.28); }
+
+    .culte-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 28px;
+    }
+    .badge-rouge { background: rgba(220,50,50,0.15); color: #ff6b6b; border: 1px solid rgba(220,50,50,0.3); }
+    .badge-bleu  { background: rgba(44,95,138,0.2); color: #7bb8e8; border: 1px solid rgba(44,95,138,0.4); }
+
+    .culte-carte h3 {
+      font-family: var(--font-titre);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--blanc);
+      margin-bottom: 8px;
+    }
+    .culte-sous { color: rgba(255,255,255,0.55); font-size: 0.9rem; font-style: italic; margin-bottom: 28px; }
+
+    .culte-infos { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .culte-info-ligne {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+    }
+    .culte-info-ligne .icone { font-size: 1.1rem; flex-shrink: 0; }
+    .culte-info-ligne .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 2px;
+    }
+    .culte-info-ligne .valeur { font-size: 0.95rem; color: rgba(255,255,255,0.88); font-weight: 500; }
+    .culte-info-ligne .valeur.heure { color: var(--or-clair); font-weight: 700; font-size: 1.05rem; }
+
+    /* ── PAROLE DE JÉSUS ─────────────────────────────── */
+    .parole { padding: 100px 0; background: var(--gris); }
+    .versets-grille {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .verset-carte {
+      background: var(--blanc);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border-top: 3px solid var(--or);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      cursor: default;
+    }
+    .verset-carte:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 36px rgba(201,168,76,0.18);
+    }
+    .verset-theme {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--or-sombre);
+    }
+    .verset-icone { font-size: 1.8rem; }
+    .verset-texte {
+      font-style: italic;
+      color: var(--texte);
+      line-height: 1.75;
+      font-size: 0.92rem;
+      flex: 1;
+    }
+    .verset-ref {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--bleu);
+      font-style: normal;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── INSCRIPTION SMS ─────────────────────────────── */
+    .inscription { padding: 100px 0; background: var(--blanc); }
+    .inscription-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--gris);
+      border-radius: 20px;
+      padding: 56px 48px;
+      box-shadow: var(--ombre);
+      border: 1px solid rgba(201,168,76,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .inscription-wrap::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .form-groupe { margin-bottom: 20px; }
+    .form-groupe label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--texte);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+    .form-groupe label span { color: var(--or-sombre); }
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      font-family: var(--font-corps);
+      font-size: 0.95rem;
+      color: var(--texte);
+      background: var(--blanc);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--or);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    }
+    .cases-groupe { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+    .case-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--texte);
+    }
+    .case-label input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--or);
+      cursor: pointer;
+    }
+    .btn-inscrire {
+      width: 100%;
+      padding: 16px;
+      font-size: 1rem;
+      margin-top: 8px;
+      justify-content: center;
+    }
+    .message-succes {
+      display: none;
+      background: #f0fff4;
+      border: 1.5px solid #48bb78;
+      border-radius: 10px;
+      padding: 16px 20px;
+      color: #276749;
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-top: 16px;
+      text-align: center;
+    }
+    .message-succes.visible { display: block; animation: fadeUp 0.4s ease; }
+    .message-erreur {
+      display: none;
+      background: #fff5f5;
+      border: 1.5px solid #fc8181;
+      border-radius: 10px;
+      padding: 16px 20px;
+      color: #c53030;
+      font-size: 0.92rem;
+      margin-top: 16px;
+      text-align: center;
+    }
+    .message-erreur.visible { display: block; }
+
+    /* ── CONTACT ─────────────────────────────────────── */
+    .contact { padding: 100px 0; background: var(--noir-doux); }
+    .contact .section-titre { color: var(--blanc); }
+    .contact .section-sous-titre { color: rgba(255,255,255,0.5); }
+    .contact-grille {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .contact-infos { display: flex; flex-direction: column; gap: 20px; }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .contact-icone {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--or), var(--or-clair));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-item h4 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 4px;
+    }
+    .contact-item p { color: rgba(255,255,255,0.75); font-size: 0.92rem; line-height: 1.5; }
+    .contact-item a { color: rgba(255,255,255,0.75); transition: color 0.2s; }
+    .contact-item a:hover { color: var(--or-clair); }
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+    }
+    .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,211,102,0.45); }
+    .map-wrapper {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.2);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    }
+    .map-wrapper iframe { display: block; width: 100%; height: 380px; border: none; }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: #070710;
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 56px 0 32px;
+    }
+    .footer-grille {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-logo {
+      font-family: var(--font-titre);
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--or), var(--or-clair));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .footer-desc { color: rgba(255,255,255,0.45); font-size: 0.88rem; line-height: 1.7; }
+    .footer-col h4 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--or-clair); }
+    .footer-bas {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 28px;
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.82rem;
+    }
+    .footer-bas strong { color: var(--or); }
+
+    /* ── ANIMATIONS ──────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+    .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .versets-grille { grid-template-columns: repeat(2, 1fr); }
+      .valeurs-grille { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-liens { display: none; }
+      .burger { display: flex; }
+      .apropos-grille { grid-template-columns: 1fr; gap: 40px; }
+      .mvv-grille { grid-template-columns: 1fr; }
+      .cultes-grille { grid-template-columns: 1fr; }
+      .contact-grille { grid-template-columns: 1fr; }
+      .footer-grille { grid-template-columns: 1fr; gap: 32px; }
+      .inscription-wrap { padding: 36px 24px; }
+      .valeurs-grille { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .versets-grille { grid-template-columns: 1fr; }
+      .valeurs-grille { grid-template-columns: 1fr; }
+      .hero-btns { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="#accueil" class="nav-logo">MIREJ-C</a>
+    <ul class="nav-liens">
+      <li><a href="#accueil">Accueil</a></li>
+      <li><a href="#a-propos">À propos</a></li>
+      <li><a href="#cultes">Cultes</a></li>
+      <li><a href="#parole">Parole de Jésus</a></li>
+      <li><a href="#inscription">S'inscrire</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li>
+        <a href="#inscription" class="btn btn-or nav-cta" style="padding:10px 22px;font-size:0.82rem;">
+          📱 SMS Édification
+        </a>
+      </li>
+    </ul>
+    <div class="burger" id="burger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="menu-mobile" id="menuMobile">
+    <a href="#accueil" onclick="fermerMenu()">Accueil</a>
+    <a href="#a-propos" onclick="fermerMenu()">À propos</a>
+    <a href="#cultes" onclick="fermerMenu()">Cultes</a>
+    <a href="#parole" onclick="fermerMenu()">Parole de Jésus</a>
+    <a href="#inscription" onclick="fermerMenu()">📱 S'inscrire pour SMS</a>
+    <a href="#contact" onclick="fermerMenu()">Contact</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ HÉROS ═══════════════════════ -->
+<section class="hero" id="accueil">
+  <div class="hero-bg"></div>
+  <div class="hero-lueur"></div>
+  <div class="container hero-contenu">
+    <div class="hero-badge">✦ Église Chrétienne ✦ Abidjan ✦</div>
+    <h1>MIREJ-C</h1>
+    <p class="hero-sous-titre">Ministère du Règne de Jésus-Christ</p>
+    <p class="hero-message">« Venez être édifié par la parole de notre Seigneur Jésus-Christ »</p>
+    <p class="hero-adresse">📍 <span>Angré aux Scars, Cocody</span> — Abidjan, Côte d'Ivoire</p>
+    <div class="hero-btns">
+      <a href="#cultes" class="btn btn-or">📅 Nos Cultes</a>
+      <a href="#inscription" class="btn btn-bleu">📱 S'inscrire aux SMS</a>
+    </div>
+  </div>
+  <div class="scroll-ind">DÉCOUVRIR</div>
+</section>
+
+<!-- ═══════════════════════ À PROPOS ═══════════════════════ -->
+<section class="a-propos" id="a-propos">
+  <div class="container">
+    <div class="apropos-grille">
+      <div class="apropos-texte fade-in">
+        <h2>Qui sommes-nous ?</h2>
+        <div class="ligne-or" style="margin-left:0;"></div>
+        <p>
+          <strong>MIREJ-C</strong> — Ministère du Règne de Jésus-Christ — est une église chrétienne
+          fervente établie à Angré aux Scars, Cocody, Abidjan. Notre vocation est d'enseigner
+          la parole vivante de notre Seigneur Jésus-Christ et de rassembler les fidèles dans
+          l'adoration, la louange et la communion fraternelle.
+        </p>
+        <p>
+          Chaque semaine, nous nous réunissons pour recevoir l'enseignement biblique et adorer
+          ensemble, afin que chacun puisse grandir dans la foi et vivre pleinement le règne de Christ.
+        </p>
+        <a href="#cultes" class="btn btn-or">Voir nos cultes →</a>
+      </div>
+      <div class="apropos-image fade-in">
+        <img
+          src="https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=800"
+          alt="Culte MIREJ-C – Adoration et louange"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="mvv-grille fade-in">
+      <div class="mvv-carte">
+        <h3>🎯 Notre Mission</h3>
+        <p>Édifier les fidèles par la parole de notre Seigneur Jésus-Christ et les accompagner dans leur croissance spirituelle.</p>
+      </div>
+      <div class="mvv-carte">
+        <h3>👁️ Notre Vision</h3>
+        <p>Former une communauté de croyants fervents qui vivent et rayonnent le règne de Christ au quotidien à Abidjan et au-delà.</p>
+      </div>
+    </div>
+
+    <p class="valeurs-titre">Nos Valeurs</p>
+    <div class="valeurs-grille fade-in">
+      <div class="valeur-item"><div class="icone">📖</div><p>Enseignement de la Bible</p></div>
+      <div class="valeur-item"><div class="icone">🙏</div><p>Adoration et louange</p></div>
+      <div class="valeur-item"><div class="icone">✨</div><p>Édification par la parole de Jésus</p></div>
+      <div class="valeur-item"><div class="icone">🤝</div><p>Communauté fraternelle</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CULTES ═══════════════════════ -->
+<section class="cultes" id="cultes">
+  <div class="container">
+    <h2 class="section-titre">Nos Cultes Hebdomadaires</h2>
+    <div class="ligne-or"></div>
+    <p class="section-sous-titre">Rejoignez-nous pour être édifié par la parole de Jésus-Christ</p>
+
+    <div class="cultes-grille">
+
+      <!-- Culte Enseignement -->
+      <div class="culte-carte enseignement fade-in">
+        <div class="culte-badge badge-rouge">🔴 Chaque Vendredi</div>
+        <h3>Culte d'Enseignement</h3>
+        <p class="culte-sous">La parole profonde de Jésus-Christ</p>
+        <div class="culte-infos">
+          <div class="culte-info-ligne">
+            <span class="icone">⏰</span>
+            <div>
+              <div class="label">Horaire</div>
+              <div class="valeur heure">19h00 – 20h30</div>
+            </div>
+          </div>
+          <div class="culte-info-ligne">
+            <span class="icone">📖</span>
+            <div>
+              <div class="label">Programme</div>
+              <div class="valeur">Enseignement biblique approfondi — Parole de Jésus</div>
+            </div>
+          </div>
+          <div class="culte-info-ligne">
+            <span class="icone">📍</span>
+            <div>
+              <div class="label">Lieu</div>
+              <div class="valeur">Angré aux Scars, Cocody, Abidjan</div>
+            </div>
+          </div>
+          <div class="culte-info-ligne">
+            <span class="icone">📞</span>
+            <div>
+              <div class="label">Contact</div>
+              <div class="valeur"><a href="tel:+2250748125766" style="color:inherit;">+225 07 48 12 57 66</a></div>
+            </div>
+          </div>
+        </div>
+        <a href="#inscription" class="btn btn-or" style="width:100%;justify-content:center;">
+          📱 Je m'inscris pour les rappels SMS
+        </a>
+      </div>
+
+      <!-- Culte Adoration -->
+      <div class="culte-carte adoration fade-in">
+        <div class="culte-badge badge-bleu">🔵 Chaque Dimanche</div>
+        <h3>Culte d'Adoration &amp; Louange</h3>
+        <p class="culte-sous">Adorer Jésus-Christ en cœur et en vérité</p>
+        <div class="culte-infos">
+          <div class="culte-info-ligne">
+            <span class="icone">⏰</span>
+            <div>
+              <div class="label">Horaire</div>
+              <div class="valeur heure" style="color:#7bb8e8;">09h00</div>
+            </div>
+          </div>
+          <div class="culte-info-ligne">
+            <span class="icone">🎵</span>
+            <div>
+              <div class="label">Programme</div>
+              <div class="valeur">Louange, adoration et communion avec Jésus-Christ</div>
+            </div>
+          </div>
+          <div class="culte-info-ligne">
+            <span class="icone">📍</span>
+            <div>
+              <div class="label">Lieu</div>
+              <div class="valeur">Angré aux Scars, Cocody, Abidjan</div>
+            </div>
+          </div>
+          <div class="culte-info-ligne">
+            <span class="icone">📞</span>
+            <div>
+              <div class="label">Contact</div>
+              <div class="valeur"><a href="tel:+2250748125766" style="color:inherit;">+225 07 48 12 57 66</a></div>
+            </div>
+          </div>
+        </div>
+        <a href="#inscription" class="btn btn-bleu" style="width:100%;justify-content:center;">
+          📱 Je m'inscris pour les rappels SMS
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PAROLE DE JÉSUS ═══════════════════════ -->
+<section class="parole" id="parole">
+  <div class="container">
+    <h2 class="section-titre">Parole de Notre Seigneur Jésus-Christ</h2>
+    <div class="ligne-or"></div>
+    <p class="section-sous-titre">Messages d'édification tirés de la parole de Jésus-Christ pour votre vie</p>
+
+    <div class="versets-grille">
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">✨ Amour de Jésus</div>
+        <div class="verset-icone">❤️</div>
+        <p class="verset-texte">« Car Dieu a tant aimé le monde qu'il a donné son Fils unique, afin que quiconque croit en lui ne périsse point, mais qu'il ait la vie éternelle. »</p>
+        <span class="verset-ref">Jean 3 : 16</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">🕊️ Paix de Jésus</div>
+        <div class="verset-icone">🕊️</div>
+        <p class="verset-texte">« Je vous laisse la paix, je vous donne ma paix. Je ne vous donne pas comme le monde donne. Que votre cœur ne se trouble point, et ne s'alarme point. »</p>
+        <span class="verset-ref">Jean 14 : 27</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">🛤️ Voie de Jésus</div>
+        <div class="verset-icone">✝️</div>
+        <p class="verset-texte">« Je suis le chemin, la vérité et la vie. Nul ne vient au Père que par moi. »</p>
+        <span class="verset-ref">Jean 14 : 6</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">😴 Repos en Jésus</div>
+        <div class="verset-icone">🌿</div>
+        <p class="verset-texte">« Venez à moi, vous tous qui êtes fatigués et chargés, et je vous donnerai du repos. »</p>
+        <span class="verset-ref">Matthieu 11 : 28</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">💪 Force par Jésus</div>
+        <div class="verset-icone">⚡</div>
+        <p class="verset-texte">« Je puis tout par celui qui me fortifie. »</p>
+        <span class="verset-ref">Philippiens 4 : 13</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">📜 Plan de Jésus</div>
+        <div class="verset-icone">🌅</div>
+        <p class="verset-texte">« Car je connais les projets que j'ai formés sur vous, dit l'Éternel, projets de paix et non de malheur, afin de vous donner un avenir et de l'espérance. »</p>
+        <span class="verset-ref">Jérémie 29 : 11</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">🤲 Amour fraternel</div>
+        <div class="verset-icone">🤝</div>
+        <p class="verset-texte">« Je vous donne un commandement nouveau : Aimez-vous les uns les autres ; comme je vous ai aimés, vous aussi, aimez-vous les uns les autres. »</p>
+        <span class="verset-ref">Jean 13 : 34</span>
+      </div>
+      <div class="verset-carte fade-in">
+        <div class="verset-theme">🏆 Victoire en Jésus</div>
+        <div class="verset-icone">👑</div>
+        <p class="verset-texte">« Voici, je vous ai donné le pouvoir de marcher sur les serpents et les scorpions, et sur toute la puissance de l'ennemi ; et rien ne pourra vous nuire. »</p>
+        <span class="verset-ref">Luc 10 : 19</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ INSCRIPTION SMS ═══════════════════════ -->
+<section class="inscription" id="inscription">
+  <div class="container">
+    <h2 class="section-titre">Recevez des SMS d'Édification</h2>
+    <div class="ligne-or"></div>
+    <p class="section-sous-titre">Inscrivez-vous pour recevoir chaque semaine des messages bibliques et des rappels de culte</p>
+
+    <div class="inscription-wrap fade-in">
+      <div class="form-groupe">
+        <label>Nom complet <span>*</span></label>
+        <input class="form-input" id="champ-nom" type="text" placeholder="Ex : Jean-Baptiste KOUASSI" required />
+      </div>
+      <div class="form-groupe">
+        <label>Numéro de téléphone (pour recevoir les SMS) <span>*</span></label>
+        <input class="form-input" id="champ-numero" type="tel" placeholder="+225 07 XX XX XX XX" required />
+      </div>
+      <div class="form-groupe">
+        <label>Adresse e-mail <span style="color:var(--texte-doux);font-weight:400;">(optionnel)</span></label>
+        <input class="form-input" id="champ-email" type="email" placeholder="exemple@email.com" />
+      </div>
+
+      <p style="font-size:0.85rem;font-weight:600;color:var(--texte);margin-bottom:12px;">
+        Je souhaite recevoir des rappels pour :
+      </p>
+      <div class="cases-groupe">
+        <label class="case-label">
+          <input type="checkbox" id="case-vendredi" checked />
+          🔴 Culte d'Enseignement — Vendredi 19h00 – 20h30
+        </label>
+        <label class="case-label">
+          <input type="checkbox" id="case-dimanche" checked />
+          🔵 Culte d'Adoration &amp; Louange — Dimanche 09h00
+        </label>
+        <label class="case-label">
+          <input type="checkbox" id="case-messages" checked />
+          ✨ Messages d'édification hebdomadaires (parole de Jésus-Christ)
+        </label>
+      </div>
+
+      <button class="btn btn-or btn-inscrire" id="btn-inscrire" onclick="soumettreForme()">
+        📱 Je m'inscris — Recevoir les SMS
+      </button>
+
+      <div class="message-succes" id="msg-succes">
+        ✅ Inscription réussie ! Bienvenue dans la famille MIREJ-C.<br />
+        <strong>Vous recevrez bientôt des SMS d'édification avec la parole de Jésus-Christ.</strong><br />
+        <small style="color:#276749;opacity:0.8;">Que le Seigneur vous bénisse !</small>
+      </div>
+      <div class="message-erreur" id="msg-erreur">
+        ⚠️ Une erreur est survenue. Vérifiez vos informations et réessayez.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <h2 class="section-titre">Nous Trouver</h2>
+    <div class="ligne-or"></div>
+    <p class="section-sous-titre">Venez nous rejoindre à Angré, Cocody — nous serons heureux de vous accueillir</p>
+
+    <div class="contact-grille">
+      <div class="contact-infos fade-in">
+        <div class="contact-item">
+          <div class="contact-icone">📍</div>
+          <div>
+            <h4>Adresse</h4>
+            <p>Angré aux Scars, Cocody<br />Abidjan, Côte d'Ivoire</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icone">📞</div>
+          <div>
+            <h4>Téléphone</h4>
+            <p><a href="tel:+2250748125766">+225 07 48 12 57 66</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icone">💬</div>
+          <div>
+            <h4>WhatsApp</h4>
+            <p><a href="https://wa.me/2250748125766" target="_blank">+225 07 48 12 57 66</a></p>
+            <a href="https://wa.me/2250748125766?text=Bonjour%20MIREJ-C%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20votre%20%C3%A9glise." target="_blank" class="btn-whatsapp" style="margin-top:12px;">
+              💬 Discuter sur WhatsApp
+            </a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icone">⏰</div>
+          <div>
+            <h4>Horaires</h4>
+            <p>🔴 Vendredi : 19h00 – 20h30<br />🔵 Dimanche : 09h00</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-wrapper fade-in">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.7!2d-3.9895!3d5.3869!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sAngr%C3%A9%20aux%20Scars%2C%20Cocody%2C%20Abidjan!5e0!3m2!1sfr!2sci!4v1620000000000!5m2!1sfr!2sci"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Localisation MIREJ-C – Angré aux Scars, Cocody"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grille">
+      <div>
+        <div class="footer-logo">MIREJ-C</div>
+        <p style="color:var(--or);font-size:0.78rem;letter-spacing:1px;margin-bottom:14px;">
+          Ministère du Règne de Jésus-Christ
+        </p>
+        <p class="footer-desc">
+          Église chrétienne dédiée à l'enseignement de la parole de Jésus-Christ
+          et à l'édification des fidèles dans la foi et l'amour de Dieu.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#a-propos">À propos</a></li>
+          <li><a href="#cultes">Cultes</a></li>
+          <li><a href="#parole">Parole de Jésus</a></li>
+          <li><a href="#inscription">S'inscrire SMS</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="#">📍 Angré aux Scars, Cocody</a></li>
+          <li><a href="tel:+2250748125766">📞 +225 07 48 12 57 66</a></li>
+          <li><a href="https://wa.me/2250748125766" target="_blank">💬 WhatsApp</a></li>
+          <li><a href="#">🔴 Vendredi 19h00 – 20h30</a></li>
+          <li><a href="#">🔵 Dimanche 09h00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bas">
+      <p>© 2026 <strong>MIREJ-C</strong> — Ministère du Règne de Jésus-Christ. Tous droits réservés.</p>
+      <p style="margin-top:6px;font-size:0.75rem;">Abidjan, Côte d'Ivoire</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
+<script>
+  /* ----- Navigation burger ----- */
+  function toggleMenu() {
+    document.getElementById('menuMobile').classList.toggle('ouvert');
+  }
+  function fermerMenu() {
+    document.getElementById('menuMobile').classList.remove('ouvert');
+  }
+
+  /* ----- Scroll fade-in ----- */
+  const observateur = new IntersectionObserver((entrees) => {
+    entrees.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observateur.observe(el));
+
+  /* ----- Inscription SMS ----- */
+  async function soumettreForme() {
+    const nom    = document.getElementById('champ-nom').value.trim();
+    const numero = document.getElementById('champ-numero').value.trim();
+    const email  = document.getElementById('champ-email').value.trim();
+    const vendredi = document.getElementById('case-vendredi').checked;
+    const dimanche = document.getElementById('case-dimanche').checked;
+    const messages = document.getElementById('case-messages').checked;
+    const btnInscrire = document.getElementById('btn-inscrire');
+    const msgSucces   = document.getElementById('msg-succes');
+    const msgErreur   = document.getElementById('msg-erreur');
+
+    if (!nom || !numero) {
+      msgErreur.textContent = '⚠️ Veuillez renseigner votre nom et votre numéro de téléphone.';
+      msgErreur.classList.add('visible');
+      setTimeout(() => msgErreur.classList.remove('visible'), 4000);
+      return;
+    }
+
+    const types = [];
+    if (vendredi) types.push('vendredi_enseignement');
+    if (dimanche) types.push('dimanche_adoration');
+    if (messages) types.push('messages_edification');
+
+    btnInscrire.disabled = true;
+    btnInscrire.textContent = '⏳ Inscription en cours…';
+
+    try {
+      /* Firebase */
+      let resultatFirebase = { success: false };
+      if (typeof window.inscrireFidele === 'function') {
+        resultatFirebase = await window.inscrireFidele(nom, numero, email, types);
+      }
+
+      /* CSV local via fetch vers backend (si disponible) */
+      await fetch('/api/inscrire', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom, numero, email, types })
+      }).catch(() => {});  /* Silencieux si pas de backend */
+
+      msgSucces.classList.add('visible');
+      btnInscrire.textContent = '✅ Inscrit !';
+      document.getElementById('champ-nom').value = '';
+      document.getElementById('champ-numero').value = '';
+      document.getElementById('champ-email').value = '';
+    } catch (e) {
+      console.error(e);
+      msgErreur.textContent = '⚠️ Erreur d\'inscription. Réessayez ou contactez-nous au +225 07 48 12 57 66.';
+      msgErreur.classList.add('visible');
+      btnInscrire.disabled = false;
+      btnInscrire.textContent = '📱 Je m\'inscris — Recevoir les SMS';
+    }
+  }
+
+  /* ----- Nav active au scroll ----- */
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('nav');
+    if (window.scrollY > 60) {
+      nav.style.background = 'rgba(7,7,16,0.98)';
+    } else {
+      nav.style.background = 'rgba(10,10,20,0.92)';
+    }
+  });
+</script>
+</body>
+</html>
