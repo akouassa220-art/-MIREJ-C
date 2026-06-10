@@ -1144,6 +1144,51 @@
   </div>
 </section>
 
+<!-- ═══════════════════════ ADMIN SMS ═══════════════════════ -->
+<!-- Accès : ajouter #admin-sms à l'URL pour afficher -->
+<section id="admin-sms" style="display:none; padding:80px 0; background:#f0f0f0; border-top:3px solid var(--or);">
+  <div class="container">
+    <div style="max-width:640px;margin:0 auto;background:#fff;border-radius:20px;padding:48px;box-shadow:var(--ombre);border:1px solid rgba(201,168,76,0.2);">
+      <h2 style="font-family:var(--font-titre);font-size:1.8rem;color:var(--noir-doux);margin-bottom:6px;">📡 Envoi SMS en Masse</h2>
+      <p style="color:var(--texte-doux);font-size:0.9rem;margin-bottom:32px;">Panneau administrateur — MIREJ-C</p>
+
+      <div class="form-groupe">
+        <label>🔐 Mot de passe admin</label>
+        <input class="form-input" id="admin-mdp" type="password" placeholder="Mot de passe" />
+      </div>
+
+      <div class="form-groupe">
+        <label>👥 Destinataires</label>
+        <select class="form-input" id="admin-type">
+          <option value="tous">Tous les fidèles inscrits</option>
+          <option value="vendredi">Culte Vendredi uniquement</option>
+          <option value="dimanche">Culte Dimanche uniquement</option>
+        </select>
+      </div>
+
+      <div class="form-groupe">
+        <label>✉️ Message SMS <span style="color:var(--texte-doux);font-weight:400;" id="admin-compteur">(0 / 160 caractères)</span></label>
+        <textarea class="form-input" id="admin-message" rows="5"
+          style="resize:vertical;line-height:1.6;"
+          placeholder="Exemple : Rappel — Culte d'Enseignement ce vendredi à 19h00. Angré aux Scars, Cocody. Que le Seigneur vous bénisse ! — MIREJ-C"
+          oninput="compterSMS()"></textarea>
+      </div>
+
+      <div id="admin-apercu" style="display:none;background:var(--gris);border-radius:10px;padding:16px;margin-bottom:20px;border-left:4px solid var(--or);">
+        <p style="font-size:0.8rem;font-weight:600;color:var(--or-sombre);margin-bottom:8px;">APERÇU DU SMS</p>
+        <p id="admin-apercu-texte" style="font-size:0.9rem;color:var(--texte);line-height:1.6;white-space:pre-wrap;"></p>
+      </div>
+
+      <button class="btn btn-or" style="width:100%;justify-content:center;" onclick="envoyerSMSAdmin()">
+        📤 Envoyer le SMS à tous
+      </button>
+
+      <div id="admin-succes" style="display:none;margin-top:20px;padding:16px;background:#d1fae5;border-radius:10px;color:#065f46;font-weight:600;"></div>
+      <div id="admin-erreur"  style="display:none;margin-top:20px;padding:16px;background:#fee2e2;border-radius:10px;color:#991b1b;font-weight:600;"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
 <footer>
   <div class="container">
@@ -1261,6 +1306,77 @@
       btnInscrire.disabled = false;
       btnInscrire.textContent = '📱 Je m\'inscris — Recevoir les SMS';
     }
+  }
+
+  /* ----- Panneau Admin SMS ----- */
+  // Afficher le panneau si l'URL contient #admin-sms
+  if (window.location.hash === '#admin-sms') {
+    document.getElementById('admin-sms').style.display = 'block';
+  }
+  window.addEventListener('hashchange', () => {
+    document.getElementById('admin-sms').style.display =
+      window.location.hash === '#admin-sms' ? 'block' : 'none';
+  });
+
+  function compterSMS() {
+    const msg = document.getElementById('admin-message').value;
+    const count = msg.length;
+    const smsCount = Math.ceil(count / 160) || 1;
+    document.getElementById('admin-compteur').textContent =
+      `(${count} caractères — ${smsCount} SMS)`;
+    const apercu = document.getElementById('admin-apercu');
+    const apercuTexte = document.getElementById('admin-apercu-texte');
+    if (msg.trim()) {
+      apercu.style.display = 'block';
+      apercuTexte.textContent = msg;
+    } else {
+      apercu.style.display = 'none';
+    }
+  }
+
+  // URL de ta Cloud Function déployée — à mettre à jour après déploiement
+  const CLOUD_FUNCTION_URL = "https://europe-west1-mirej-c.cloudfunctions.net/envoyerSMSMasse";
+
+  async function envoyerSMSAdmin() {
+    const motDePasse = document.getElementById('admin-mdp').value.trim();
+    const message    = document.getElementById('admin-message').value.trim();
+    const type       = document.getElementById('admin-type').value;
+    const succes     = document.getElementById('admin-succes');
+    const erreur     = document.getElementById('admin-erreur');
+
+    succes.style.display = 'none';
+    erreur.style.display = 'none';
+
+    if (!motDePasse) { erreur.textContent = '⚠️ Entrez le mot de passe admin.'; erreur.style.display='block'; return; }
+    if (!message)    { erreur.textContent = '⚠️ Le message est vide.';          erreur.style.display='block'; return; }
+
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = '⏳ Envoi en cours…';
+
+    try {
+      const res = await fetch(CLOUD_FUNCTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ motDePasse, message, type })
+      });
+      const data = await res.json();
+      if (res.ok && data.succes) {
+        succes.textContent = `✅ SMS envoyé à ${data.envoyes} fidèle(s) avec succès !`;
+        succes.style.display = 'block';
+        document.getElementById('admin-message').value = '';
+        compterSMS();
+      } else {
+        erreur.textContent = `❌ Erreur : ${data.erreur || 'Échec de l\'envoi.'}`;
+        erreur.style.display = 'block';
+      }
+    } catch(e) {
+      erreur.textContent = '❌ Impossible de joindre le serveur. Vérifiez votre connexion.';
+      erreur.style.display = 'block';
+    }
+
+    btn.disabled = false;
+    btn.textContent = '📤 Envoyer le SMS à tous';
   }
 
   /* ----- Nav active au scroll ----- */
