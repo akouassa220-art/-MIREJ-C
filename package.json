@@ -1,0 +1,13 @@
+{
+  "name": "mirej-sms-server",
+  "version": "1.0.0",
+  "description": "Serveur SMS pour MIREJ-C",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "africastalking": "^0.6.4",
+    "express": "^4.18.2"
+  }
+}
